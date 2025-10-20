@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Edit Resep{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10"> <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Edit Resep ({{ resep.pelanggan.nama }} - {{ resep.tanggal_periksa }})</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">{{ form.tanggal_periksa.label_tag }} {{ form.tanggal_periksa }}</div>
+                        <div class="col-md-4 mb-3">{{ form.jenis_lensa.label_tag }} {{ form.jenis_lensa }}</div>
+                        <div class="col-md-4 mb-3">{{ form.jenis_coating.label_tag }} {{ form.jenis_coating }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">{{ form.indeks_lensa.label_tag }} {{ form.indeks_lensa }}</div>
+                        <div class="col-md-4 mb-3">{{ form.pd.label_tag }} {{ form.pd }}</div>
+                    </div>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-bordered">
+                            <tr class="table-light">
+                                <th>Mata</th>
+                                <th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th>
+                            </tr>
+                            <tr>
+                                <th>Kanan (OD)</th>
+                                <td>{{ form.od_sph }}</td>
+                                <td>{{ form.od_cyl }}</td>
+                                <td>{{ form.od_axis }}</td>
+                                <td>{{ form.od_add }}</td>
+                            </tr>
+                            <tr>
+                                <th>Kiri (OS)</th>
+                                <td>{{ form.os_sph }}</td>
+                                <td>{{ form.os_cyl }}</td>
+                                <td>{{ form.os_axis }}</td>
+                                <td>{{ form.os_add }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        </div>
+
+            <hr>
+            <h5 class="mb-3">Data Finansial</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    {{ form.harga_frame.label_tag }}
+                    {{ form.harga_frame }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.harga_lensa.label_tag }}
+                    {{ form.harga_lensa }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.diskon.label_tag }}
+                    {{ form.diskon }}
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                {{ form.lunas }}
+                <label class="form-check-label" for="{{ form.lunas.id_for_label }}">
+                    {{ form.lunas.label }}
+                </label>
+            </div>
+            <div class="mb-3">
+                        {{ form.catatan.label_tag }}
+                        {{ form.catatan }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

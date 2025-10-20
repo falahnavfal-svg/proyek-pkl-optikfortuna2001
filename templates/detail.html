@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block title %}{{ pelanggan.nama }}{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Data: {{ pelanggan.nama }}</h4>
+        <a href="{% url 'edit_pelanggan' pelanggan.pk %}" class="btn btn-outline-primary btn-sm">
+           ✏️ Edit Data Pelanggan
+        </a>
+    </div>
+    <div class="card-body">
+        <p><strong>No. HP:</strong> {{ pelanggan.no_hp }}</p>
+        <p><strong>Alamat:</strong> {{ pelanggan.alamat|default:"-" }}</p>
+        <p><strong>Tgl. Lahir:</strong> {{ pelanggan.tanggal_lahir|date:"d M Y"|default:"-" }}</p>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Tambah Resep Baru</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">{{ form.tanggal_periksa.label_tag }} {{ form.tanggal_periksa }}</div>
+                <div class="col-md-4 mb-3">{{ form.jenis_lensa.label_tag }} {{ form.jenis_lensa }}</div>
+                <div class="col-md-4 mb-3">{{ form.jenis_coating.label_tag }} {{ form.jenis_coating }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">{{ form.indeks_lensa.label_tag }} {{ form.indeks_lensa }}</div>
+                <div class="col-md-4 mb-3">{{ form.pd.label_tag }} {{ form.pd }}</div>
+            </div>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered">
+                    <tr class="table-light">
+                        <th>Mata</th>
+                        <th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th>
+                    </tr>
+                    <tr>
+                        <th>Kanan (OD)</th>
+                        <td>{{ form.od_sph }}</td>
+                        <td>{{ form.od_cyl }}</td>
+                        <td>{{ form.od_axis }}</td>
+                        <td>{{ form.od_add }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kiri (OS)</th>
+                        <td>{{ form.os_sph }}</td>
+                        <td>{{ form.os_cyl }}</td>
+                        <td>{{ form.os_axis }}</td>
+                        <td>{{ form.os_add }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="mb-3">
+                </div>
+
+            <hr>
+            <h5 class="mb-3">Data Finansial</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    {{ form.harga_frame.label_tag }}
+                    {{ form.harga_frame }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.harga_lensa.label_tag }}
+                    {{ form.harga_lensa }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.diskon.label_tag }}
+                    {{ form.diskon }}
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                {{ form.lunas }}
+                <label class="form-check-label" for="{{ form.lunas.id_for_label }}">
+                    {{ form.lunas.label }}
+                </label>
+            </div>
+            <div class="mb-3">
+                {{ form.catatan.label_tag }}
+                {{ form.catatan }}
+            </div>
+            
+            <button type="submit" class="btn btn-success w-100">Simpan Resep Baru</button>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm printable-area">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Riwayat Resep</h4>
+        <button onclick="window.print()" class="btn btn-info btn-sm d-print-none">
+            🖨️ Cetak Riwayat
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Tgl. Periksa</th>
+                        <th>Jenis Lensa</th>
+                        <th>Coating</th>
+                        <th>Indeks</th>
+                        <th colspan="4" class="text-center">Mata Kanan (OD)</th>
+                        <th colspan="4" class="text-center">Mata Kiri (OS)</th>
+                        <th>PD</th>
+                        <th>Total</th> <th>Status</th> <th>Aksi</th>
+                    </tr>
+                    <tr class="table-light">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th>
+                        <th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th>
+                        <th></th>
+                        <th></th> <th></th> <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resep in resep_list %}
+                    <tr>
+                        <td><strong>{{ resep.tanggal_periksa|date:"d/m/Y" }}</strong></td>
+                        <td>{{ resep.get_jenis_lensa_display }}</td>
+                        <td>{{ resep.get_jenis_coating_display }}</td>
+                        <td>{{ resep.get_indeks_lensa_display }}</td>
+                        <td>{{ resep.od_sph }}</td>
+                        <td>{{ resep.od_cyl }}</td>
+                        <td>{{ resep.od_axis }}</td>
+                        <td>{{ resep.od_add }}</td>
+                        <td>{{ resep.os_sph }}</td>
+                        <td>{{ resep.os_cyl }}</td>
+                        <td>{{ resep.os_axis }}</td>
+                        <td>{{ resep.os_add }}</td>
+                        <td>{{ resep.pd }}</td>
+                        <td>
+                            <td>Rp {{ resep.total_bayar|default:0 }}</td>
+                    <td>
+                        {% if resep.lunas %}
+                            <span class="badge bg-success">Lunas</span>
+                        {% else %}
+                            <span class="badge bg-danger">Belum Lunas</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                    <a href="{% url 'edit_resep' resep.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                </td>
+                    </tr>
+                    {% if resep.catatan %}
+                    <tr class="table-info"><td colspan="14"><strong>Catatan:</strong> {{ resep.catatan }}</td></tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr><td colspan="14" class="text-center p-4">Belum ada riwayat resep.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Pencarian Pelanggan{% endblock %}
+
+{% block content %}
+<!-- ▼▼▼ (BARU) SISIPKAN KODE DASHBOARD INI ▼▼▼ -->
+<div class="row mb-4">
+    <!-- Kartu Total Pasien -->
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase">Total Pasien</h6>
+                <p class="card-text fs-2 fw-bold">{{ jumlah_pasien }} Orang</p>
+            </div>
+        </div>
+    </div>
+    <!-- Kartu Resep Hari Ini -->
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase">Transaksi Hari Ini</h6>
+                <p class="card-text fs-2 fw-bold">{{ resep_hari_ini }} Resep</p>
+            </div>
+        </div>
+    </div>
+    <!-- Kartu Omset Hari Ini -->
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-info shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase">Omset Hari Ini</h6>
+                <p class="card-text fs-2 fw-bold">Rp {{ total_penjualan_hari_ini|default:0 }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Cari Data Pelanggan</h3>
+
+                <form method="GET" action="{% url 'search' %}">
+                    <div class="input-group input-group-lg mb-3">
+                        <input type="text" class="form-control" 
+                               placeholder="Ketik nama atau No. HP..." 
+                               name="query" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit">Cari</button>
+
+                        <a href="{% url 'tambah_pelanggan' %}" class="btn btn-success" title="Tambah Pelanggan Baru">
+                            + Tambah
+                        </a>
+                    </div>
+                </form>
+                {% if pelanggan_list %}
+                    <hr>
+
+                    {% if is_search_result %}
+                        <h5 class="mb-3">Hasil Pencarian untuk: "{{ query }}"</h5>
+                    {% else %}
+                        <h5 class="mb-3">5 Pelanggan Terbaru Ditambahkan</h5>
+                    {% endif %}
+
+                    <div class="list-group">
+                        {% for pelanggan in pelanggan_list %}
+                            <a href="{% url 'detail' pelanggan.pk %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h5 class="mb-1">{{ pelanggan.nama }}</h5>
+                                {% if pelanggan.last_periksa and pelanggan.last_periksa < satu_tahun_lalu %}
+                                    <span class="badge bg-danger">
+                                        Waktunya Cek Ulang!
+                                    </span>
+                                    {% endif %}
+                                    </div>
+                                <p class="mb-1">No. HP: {{ pelanggan.no_hp }}</p>
+                                <small class="text-muted">
+                                    Periksa Terakhir: {{ pelanggan.last_periksa|date:"d M Y"|default:"Belum ada resep" }}
+                                </small>
+                            </a>
+                        {% empty %}
+                            <div class="alert alert-warning">
+                                {% if is_search_result %}
+                                    Data pelanggan tidak ditemukan. 
+                                    <a href="/admin/pasien/pelanggan/add/" target="_blank" class="alert-link">Tambah data baru?</a>
+                                {% else %}
+                                    Belum ada data pelanggan di sistem.
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% elif is_search_result %}
+                    <hr>
+                        <div class="alert alert-warning">
+                        Data pelanggan tidak ditemukan. 
+                        <a href="{% url 'tambah_pelanggan' %}" class="alert-link">Tambah data baru?</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
