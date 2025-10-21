@@ -1,4 +1,3 @@
-# Di dalam file: pasien/models.py
 from django.db import models
 from django.utils import timezone
 
@@ -6,7 +5,6 @@ class Pelanggan(models.Model):
     nama = models.CharField(max_length=100)
     no_hp = models.CharField(max_length=20, unique=True)
     
-    # (FIX) FIELD INI HILANG TADI, SAYA TAMBAHKAN KEMBALI
     alamat = models.TextField(blank=True, null=True)
     tanggal_lahir = models.DateField(blank=True, null=True)
     
@@ -20,8 +18,6 @@ class Pelanggan(models.Model):
         verbose_name_plural = "Data Pelanggan"
 
 class Resep(models.Model):
-    # (FIX) SEMUA BARIS DI BAWAH INI HARUS MENJOROK KE DALAM (INDENT)
-    # AGAR MENJADI BAGIAN DARI 'class Resep'
     
     JENIS_LENSA_CHOICES = [
         ('SV', 'Single Vision'),
@@ -45,8 +41,7 @@ class Resep(models.Model):
         ('LAIN', 'Lainnya (misal: 1.50, 1.59)'),
     ]
     
-    # ... (field lainnya) ...
-
+  
     pelanggan = models.ForeignKey(Pelanggan, on_delete=models.CASCADE, related_name='resep_history')
     tanggal_periksa = models.DateField(default=timezone.now)
     
@@ -96,17 +91,16 @@ class Resep(models.Model):
 
     catatan = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # (BARU) Fungsi untuk menghitung total secara otomatis
     def save(self, *args, **kwargs):
-        # Hitung total
+
         self.total_bayar = (self.harga_frame + self.harga_lensa) - self.diskon
-        # Panggil fungsi save() yang asli
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Resep {self.pelanggan.nama} [{self.tanggal_periksa}]"
 
     class Meta:
-        ordering = ['-tanggal_periksa'] # Urutkan resep terbaru di atas
+        ordering = ['-tanggal_periksa'] 
         verbose_name = "Data Resep"
         verbose_name_plural = "Data Resep"
