@@ -1,10 +1,9 @@
-# Di dalam file: pasien/admin.py
 from django.contrib import admin
 from .models import Pelanggan, Resep
 
 class ResepInline(admin.TabularInline):
     model = Resep
-    extra = 1 # Tampilkan 1 form resep baru
+    extra = 1
     ordering = ('-tanggal_periksa',)
 
 @admin.register(Pelanggan)
