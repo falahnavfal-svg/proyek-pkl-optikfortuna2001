@@ -19,9 +19,9 @@ from django.urls import path
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
-admin.site.site_header = "Administrasi Fortuna 2001"  # Teks di header (yang kamu tanyakan)
-admin.site.site_title = "Admin Fortuna 2001"          # Teks di title tab browser
-admin.site.index_title = "Selamat Datang Admin"   # Teks di halaman index admin
+admin.site.site_header = "Administrasi Fortuna 2001"  
+admin.site.site_title = "Admin Fortuna 2001"          
+admin.site.index_title = "Selamat Datang Admin"   
 
 urlpatterns = [
     path('admin/', admin.site.urls),
